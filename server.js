@@ -3,12 +3,20 @@ const { URL } = require('node:url');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const PORT = Number(process.env.PORT || 3000);
+const rawPort = process.env.SERVER_PORT || process.env.PORT || '3000';
+const PORT = Number.parseInt(String(rawPort), 10);
+if (!Number.isInteger(PORT) || PORT < 0 || PORT >= 65536) {
+  console.error(`[BrixHub] Invalid port: ${rawPort}`);
+  console.error('[BrixHub] Set Pterodactyl PORT/ SERVER_PORT to the server allocation port.');
+  process.exit(1);
+}
+
 const BRIXHUB_API_URL = (process.env.BRIXHUB_API_URL || 'https://brixhub.net/api/v1').replace(/\/$/, '');
 const BRIXHUB_API_KEY = process.env.BRIXHUB_API_KEY || '';
 const MAX_BODY = 64 * 1024;
 const RATE_WINDOW = 60_000;
-const RATE_MAX = Number(process.env.RATE_LIMIT || 30);
+const parsedRate = Number.parseInt(process.env.RATE_LIMIT || '30', 10);
+const RATE_MAX = Number.isInteger(parsedRate) && parsedRate > 0 ? parsedRate : 30;
 const buckets = new Map();
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
@@ -53,7 +61,7 @@ function serveFrontend(req,res) {
 }
 async function route(req,res) {
   const url=new URL(req.url,`http://${req.headers.host||'localhost'}`);
-  if(req.method==='GET' && url.pathname==='/api/health') return json(res,200,{ok:true,service:'brixhub',time:new Date().toISOString()});
+  if(req.method==='GET' && url.pathname==='/api/health') return json(res,200,{ok:true,service:'brixhub',port:PORT,time:new Date().toISOString()});
   if(req.method==='GET' && url.pathname==='/api/config') return json(res,200,{ok:true,configured:Boolean(BRIXHUB_API_KEY),api:'/api/search'});
   if(req.method==='POST' && url.pathname==='/api/search') {
     if(!allowed(req)) return json(res,429,{ok:false,error:'Rate limit exceeded'});
@@ -69,6 +77,6 @@ async function route(req,res) {
   return json(res,404,{ok:false,error:'Not found'});
 }
 const server=http.createServer(async(req,res)=>{try{await route(req,res);}catch(error){console.error(`[${new Date().toISOString()}]`,error);if(!res.headersSent)json(res,error.status||500,{ok:false,error:error.message||'Internal server error'});}});
-server.listen(PORT,'0.0.0.0',()=>console.log(`BrixHub listening on http://0.0.0.0:${PORT}`));
+server.listen(PORT,'0.0.0.0',()=>console.log(`[BrixHub] Listening on 0.0.0.0:${PORT}`));
 process.on('SIGTERM',()=>server.close(()=>process.exit(0)));
 process.on('SIGINT',()=>server.close(()=>process.exit(0)));
