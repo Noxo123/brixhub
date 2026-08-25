@@ -2,17 +2,44 @@ const http = require('node:http');
 const { URL } = require('node:url');
 const fs = require('node:fs');
 const path = require('node:path');
+const { execFileSync, spawn } = require('node:child_process');
 
+const APP_DIR = __dirname;
+const REPO_URL = process.env.REPO_URL || 'https://github.com/Noxo123/brixhub.git';
+const BRANCH = process.env.BRANCH || 'main';
+const AUTO_UPDATE = String(process.env.AUTO_UPDATE ?? 'true').toLowerCase() !== 'false';
+const UPDATE_INTERVAL = Math.max(30, Number.parseInt(process.env.UPDATE_INTERVAL || '300', 10)) * 1000;
 const rawPort = process.env.SERVER_PORT || process.env.PORT || '3000';
 const PORT = Number.parseInt(String(rawPort), 10);
-if (!Number.isInteger(PORT) || PORT < 0 || PORT >= 65536) { console.error(`[BrixHub] Invalid port: ${rawPort}`); process.exit(1); }
 const BRIXHUB_API_URL=(process.env.BRIXHUB_API_URL||'https://brixhub.net/api/v1').replace(/\/$/,'');
 const BRIXHUB_API_KEY=process.env.BRIXHUB_API_KEY||'';
 const MAX_BODY=64*1024, RATE_WINDOW=60000;
 const n=Number.parseInt(process.env.RATE_LIMIT||'30',10), RATE_MAX=Number.isInteger(n)&&n>0?n:30;
 const buckets=new Map();
-const PUBLIC_DIR=fs.existsSync(path.join(process.cwd(),'public'))?path.join(process.cwd(),'public'):path.join(__dirname,'public');
 
+if(!Number.isInteger(PORT)||PORT<0||PORT>=65536){console.error(`[BrixHub] Invalid port: ${rawPort}`);process.exit(1)}
+
+function git(args){return execFileSync('git',args,{cwd:APP_DIR,stdio:['ignore','pipe','pipe'],encoding:'utf8'}).trim()}
+function updateRepo(){
+  if(!AUTO_UPDATE)return false;
+  if(!fs.existsSync(path.join(APP_DIR,'.git'))){console.log('[BrixHub] No .git directory; skipping self-update.');return false}
+  try{
+    const before=git(['rev-parse','HEAD']);
+    git(['fetch','--depth=1','origin',BRANCH]);
+    const remote=git(['rev-parse',`origin/${BRANCH}`]);
+    if(before===remote)return false;
+    console.log(`[BrixHub] Update available: ${before.slice(0,7)} -> ${remote.slice(0,7)}`);
+    git(['reset','--hard',`origin/${BRANCH}`]);
+    console.log('[BrixHub] Repository updated. Restarting with new code...');
+    return true;
+  }catch(e){console.error('[BrixHub] Auto-update failed:',e.stderr||e.message);return false}
+}
+
+// On a Pterodactyl server, server.js is normally already inside the cloned repository.
+// Pull the latest commit before starting the HTTP service.
+if(updateRepo())process.exit(0);
+
+const PUBLIC_DIR=fs.existsSync(path.join(APP_DIR,'public'))?path.join(APP_DIR,'public'):path.join(process.cwd(),'public');
 function json(res,status,data){const body=JSON.stringify(data);res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Content-Length':Buffer.byteLength(body),'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(body)}
 function ip(req){return(req.headers['x-forwarded-for']||req.socket.remoteAddress||'unknown').toString().split(',')[0].trim()}
 function allowed(req){const now=Date.now(),key=ip(req),b=buckets.get(key)||{start:now,count:0};if(now-b.start>=RATE_WINDOW){b.start=now;b.count=0}b.count++;buckets.set(key,b);return b.count<=RATE_MAX}
@@ -21,4 +48,9 @@ async function brixhub(apiPath,options={}){if(!BRIXHUB_API_KEY)throw Object.assi
 function serveFile(res,file){const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'application/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.ico':'image/x-icon'};try{if(!fs.statSync(file).isFile())return false;const ext=path.extname(file);res.writeHead(200,{'Content-Type':types[ext]||'application/octet-stream','Cache-Control':ext==='.html'?'no-cache':'public, max-age=3600'});fs.createReadStream(file).pipe(res);return true}catch{return false}}
 function frontend(req,res){let p=decodeURIComponent(new URL(req.url,`http://${req.headers.host||'localhost'}`).pathname);if(p==='/'||!path.extname(p))p='/index.html';const file=path.resolve(PUBLIC_DIR,'.'+p);if(!file.startsWith(PUBLIC_DIR+path.sep))return false;return serveFile(res,file)}
 async function route(req,res){const u=new URL(req.url,`http://${req.headers.host||'localhost'}`);if(req.method==='GET'&&u.pathname==='/api/health')return json(res,200,{ok:true,service:'brixhub',port:PORT,time:new Date().toISOString()});if(req.method==='GET'&&u.pathname==='/api/config')return json(res,200,{ok:true,configured:Boolean(BRIXHUB_API_KEY),api:'/api/search'});if(req.method==='POST'&&u.pathname==='/api/search'){if(!allowed(req))return json(res,429,{ok:false,error:'Rate limit exceeded'});const payload=await readBody(req);if(!payload||typeof payload!=='object'||Array.isArray(payload))return json(res,400,{ok:false,error:'JSON object expected'});const fields=['NomFamille','Prenom','Email','Telephone','Ville','Profession','SIREN','SIRET','DiscordID','SteamID','page','limit'],query={};for(const k of fields)if(payload[k]!==undefined&&payload[k]!==null&&String(payload[k]).trim()!=='')query[k]=payload[k];if(!Object.keys(query).some(k=>!['page','limit'].includes(k)))return json(res,400,{ok:false,error:'Provide at least one search field'});return json(res,200,{ok:true,data:await brixhub('/search',{method:'POST',body:JSON.stringify(query)})})}if(req.method==='GET'&&frontend(req,res))return;return json(res,404,{ok:false,error:'Not found'})}
-const server=http.createServer(async(req,res)=>{try{await route(req,res)}catch(e){console.error(`[${new Date().toISOString()}]`,e);if(!res.headersSent)json(res,e.status||500,{ok:false,error:e.message||'Internal server error'})}});server.listen(PORT,'0.0.0.0',()=>console.log(`[BrixHub] Listening on 0.0.0.0:${PORT}`));process.on('SIGTERM',()=>server.close(()=>process.exit(0)));process.on('SIGINT',()=>server.close(()=>process.exit(0)));
+const server=http.createServer(async(req,res)=>{try{await route(req,res)}catch(e){console.error(`[${new Date().toISOString()}]`,e);if(!res.headersSent)json(res,e.status||500,{ok:false,error:e.message||'Internal server error'})}});
+server.listen(PORT,'0.0.0.0',()=>console.log(`[BrixHub] Listening on 0.0.0.0:${PORT}`));
+
+if(AUTO_UPDATE){setInterval(()=>{try{if(updateRepo()){console.log('[BrixHub] Update detected. Pterodactyl will restart the process.');process.exit(0)}}catch(e){console.error('[BrixHub] Update check failed:',e.message)}},UPDATE_INTERVAL).unref()}
+process.on('SIGTERM',()=>server.close(()=>process.exit(0)));
+process.on('SIGINT',()=>server.close(()=>process.exit(0)));
