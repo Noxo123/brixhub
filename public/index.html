@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BrixHub</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#09090b;color:#f4f4f5;min-height:100vh}main{width:min(1100px,92%);margin:0 auto;padding:56px 0}.brand{font-weight:800;font-size:24px;letter-spacing:-.04em}.muted{color:#a1a1aa}.hero{margin:70px 0 30px}.hero h1{font-size:clamp(42px,7vw,76px);line-height:.95;margin:0 0 18px;letter-spacing:-.06em}.hero p{font-size:18px;color:#a1a1aa;max-width:680px}.panel{background:#111113;border:1px solid #27272a;border-radius:24px;padding:24px;box-shadow:0 20px 70px #0008}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-size:12px;color:#a1a1aa;margin:0 0 7px}.field input{width:100%;padding:14px 15px;border:1px solid #27272a;border-radius:12px;background:#18181b;color:#fff;outline:none}.field input:focus{border-color:#71717a}.actions{display:flex;gap:10px;margin-top:18px}.button{border:0;border-radius:12px;padding:13px 18px;background:#f4f4f5;color:#09090b;font-weight:700;cursor:pointer}.button:disabled{opacity:.5;cursor:wait}.status{margin-top:18px;color:#a1a1aa}.results{margin-top:22px;white-space:pre-wrap;background:#09090b;border-radius:14px;padding:18px;overflow:auto;max-height:500px}.footer{margin-top:25px;font-size:12px;color:#71717a}@media(max-width:700px){.grid{grid-template-columns:1fr}.hero{margin-top:45px}}
+</style></head>
+<body><main>
+<div class="brand">BRIXHUB</div>
+<section class="hero"><h1>Recherche.<br>Simplement.</h1><p>Interface de recherche BrixHub servie directement par <code>server.js</code>. La clé API reste côté serveur.</p></section>
+<section class="panel"><div class="grid">
+<div class="field"><label>Nom</label><input name="NomFamille" placeholder="Nom de famille"></div>
+<div class="field"><label>Prénom</label><input name="Prenom" placeholder="Prénom"></div>
+<div class="field"><label>Email</label><input name="Email" placeholder="email@example.com"></div>
+<div class="field"><label>Téléphone</label><input name="Telephone" placeholder="Téléphone"></div>
+<div class="field"><label>Ville</label><input name="Ville" placeholder="Ville"></div>
+<div class="field"><label>Profession</label><input name="Profession" placeholder="Profession"></div>
+<div class="field"><label>SIREN</label><input name="SIREN" placeholder="SIREN"></div>
+<div class="field"><label>SIRET</label><input name="SIRET" placeholder="SIRET"></div>
+</div><div class="actions"><button class="button" id="search">Rechercher</button><button class="button" id="clear" type="button">Effacer</button></div><div class="status" id="status">Prêt.</div><div class="results" id="results" hidden></div></section>
+<div class="footer">Utilisez uniquement des recherches pour lesquelles vous êtes autorisé à accéder aux données.</div>
+</main>
+<script>
+const $=s=>document.querySelector(s), fields=[...document.querySelectorAll('input')];
+$('#clear').onclick=()=>{fields.forEach(x=>x.value='');$('#results').hidden=true;$('#status').textContent='Prêt.'};
+$('#search').onclick=async()=>{const payload={};fields.forEach(x=>{if(x.value.trim())payload[x.name]=x.value.trim()});if(!Object.keys(payload).length){$('#status').textContent='Indique au moins un critère.';return}$('#search').disabled=true;$('#status').textContent='Recherche en cours…';$('#results').hidden=true;try{const r=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Erreur');$('#results').textContent=JSON.stringify(d.data,null,2);$('#results').hidden=false;$('#status').textContent='Recherche terminée.'}catch(e){$('#status').textContent='Erreur : '+e.message}finally{$('#search').disabled=false}};
+</script></body></html>
