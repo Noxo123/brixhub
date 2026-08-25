@@ -1,41 +1,2015 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09090b"><title>BrixHub — API Dashboard</title>
-<style>
-:root{--bg:#09090b;--panel:#111113;--panel2:#18181b;--line:#27272a;--text:#f4f4f5;--muted:#a1a1aa;--accent:#8b5cf6;--good:#22c55e;--red:#ef4444}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 75% -10%,#4c1d9550,transparent 35%),var(--bg);color:var(--text);font:15px Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit;text-decoration:none}button,input,select{font:inherit}.layout{display:grid;grid-template-columns:245px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:#0b0b0de8;backdrop-filter:blur(18px);padding:22px 15px}.brand{font-weight:900;font-size:22px;letter-spacing:-.05em;padding:8px 10px}.brand b{color:#a78bfa}.nav{margin-top:28px;display:grid;gap:4px}.nav a{padding:10px 12px;border-radius:9px;color:var(--muted)}.nav a:hover,.nav a.active{background:var(--panel2);color:#fff}.sideStatus{position:absolute;bottom:18px;left:15px;right:15px;border:1px solid var(--line);border-radius:13px;padding:13px;background:var(--panel);font-size:12px}.dot{width:8px;height:8px;background:var(--good);display:inline-block;border-radius:50%;margin-right:7px}.main{width:min(1200px,100%);margin:auto;padding:35px clamp(18px,5vw,65px) 80px}.hero{padding:55px 0 38px}.eyebrow{text-transform:uppercase;letter-spacing:.15em;color:#a78bfa;font-size:11px;font-weight:850}.hero h1{font-size:clamp(45px,7vw,80px);line-height:.92;letter-spacing:-.065em;margin:12px 0 18px}.hero p{max-width:720px;color:var(--muted);font-size:18px;line-height:1.65}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.btn{border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:#fff;padding:11px 15px;font-weight:750;cursor:pointer}.btn.primary{background:linear-gradient(135deg,#8b5cf6,#6366f1);border:0}.section{border-top:1px solid var(--line);padding:50px 0}.section h2{font-size:29px;letter-spacing:-.04em;margin:0 0 8px}.section>p{color:var(--muted);line-height:1.6}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}.card,.panel{background:linear-gradient(180deg,#151518,#101012);border:1px solid var(--line);border-radius:16px;padding:19px}.card strong{font-size:24px;display:block;margin-bottom:5px}.muted{color:var(--muted)}.endpoint{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}.endpoint:last-child{border-bottom:0}.method{font-size:10px;font-weight:900;border-radius:5px;padding:4px 6px;background:#064e3b;color:#86efac}.path,code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.path{font-size:13px}.searchgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.field input,.field select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#0c0c0e;color:#fff;outline:none}.field input:focus,.field select:focus{border-color:#8b5cf6}.full{grid-column:1/-1}.result{margin-top:18px;background:#080809;border:1px solid var(--line);border-radius:12px;padding:15px;white-space:pre-wrap;overflow:auto;max-height:480px;font:12px/1.6 ui-monospace,monospace}.table{overflow:auto;margin-top:18px}table{width:100%;border-collapse:collapse;min-width:650px}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line)}th{font-size:11px;color:#d4d4d8}td{color:var(--muted)}.code{background:#080809;border:1px solid var(--line);border-radius:12px;padding:17px;overflow:auto;font-size:12px;line-height:1.6}.notice{margin-top:15px;padding:14px;border:1px solid #3f3f46;border-radius:11px;background:#18181b;color:#d4d4d8;line-height:1.5}.footer{text-align:center;color:#71717a;padding:35px 0;font-size:12px}@media(max-width:900px){.layout{display:block}.side{display:none}.cards{grid-template-columns:1fr 1fr}}@media(max-width:600px){.main{padding:20px 15px}.hero{padding-top:35px}.searchgrid,.cards{grid-template-columns:1fr}.full{grid-column:auto}}
-</style></head>
-<body><div class="layout">
-<aside class="side"><div class="brand">BRIX<b>HUB</b></div><nav class="nav"><a class="active" href="#home">Overview</a><a href="#explorer">API Explorer</a><a href="#endpoints">Endpoints</a><a href="#plans">Plans</a><a href="#auth">Authentification</a><a href="#schema">Champs</a><a href="#examples">Exemples</a><a href="#errors">Erreurs</a></nav><div class="sideStatus"><span class="dot"></span><b>API Gateway</b><br><span class="muted">Interface opérationnelle</span></div></aside>
-<main class="main">
-<section class="hero" id="home"><div class="eyebrow">BrixHub API v1</div><h1>Explorez.<br>Recherchez.<br>Intégrez.</h1><p>Une interface moderne pour découvrir l'API REST BrixHub, tester vos requêtes et intégrer vos applications. Toutes les réponses sont au format JSON.</p><div class="actions"><a class="btn primary" href="#explorer">Ouvrir l'API Explorer</a><a class="btn" href="https://api.brixhub.to/api/v1/docs" target="_blank" rel="noreferrer">Swagger UI ↗</a></div></section>
-<section class="section"><div class="cards"><div class="card"><strong>REST</strong><span class="muted">API v1</span></div><div class="card"><strong>JSON</strong><span class="muted">application/json</span></div><div class="card"><strong>HTTPS</strong><span class="muted">HTTPS uniquement</span></div><div class="card"><strong>7</strong><span class="muted">plans disponibles</span></div></div></section>
-<section class="section" id="explorer"><h2>API Explorer</h2><p>Testez <code>POST /api/v1/search</code> depuis votre navigateur. Votre clé est utilisée uniquement pour cette requête.</p><div class="panel"><div class="searchgrid"><div class="field"><label>Nom de famille</label><input name="nom_famille" placeholder="Dupont"></div><div class="field"><label>Prénom</label><input name="prenom" placeholder="Jean"></div><div class="field"><label>Email</label><input name="email" placeholder="jean@example.com"></div><div class="field"><label>Téléphone</label><input name="telephone" placeholder="0612345678"></div><div class="field"><label>Ville</label><input name="ville" placeholder="Paris"></div><div class="field"><label>Code postal</label><input name="code_postal" placeholder="75001"></div><div class="field"><label>SIREN</label><input name="siren" placeholder="123456789"></div><div class="field"><label>SIRET</label><input name="siret" placeholder="12345678900000"></div><div class="field"><label>Steam / Discord / FiveM</label><input name="discord_id" placeholder="Identifiant"></div><div class="field"><label>Profession</label><input name="profession" placeholder="Développeur"></div><div class="field"><label>Résultats / page</label><select id="per_page"><option>10</option><option>25</option><option>50</option><option>100</option></select></div><div class="field"><label>Recherche flexible</label><select id="flexible"><option value="false">Exacte</option><option value="true">Flexible</option></select></div></div><div class="actions"><button class="btn primary" id="search">Exécuter</button><button class="btn" id="clear">Effacer</button></div><div id="status" class="muted" style="margin-top:14px">Prêt.</div><pre id="result" class="result" hidden></pre></div></section>
-<section class="section" id="endpoints"><h2>Endpoints</h2><p>Les routes principales de l'API v1.</p><div class="panel"><div class="endpoint"><span class="method">POST</span><span class="path">/api/v1/search</span><span class="muted">Recherche multi-critères</span></div><div class="endpoint"><span class="method">GET</span><span class="path">/api/v1/lookup/email/{email}</span><span class="muted">Reverse lookup email</span></div><div class="endpoint"><span class="method">GET</span><span class="path">/api/v1/lookup/phone/{phone}</span><span class="muted">Reverse lookup téléphone</span></div><div class="endpoint"><span class="method">GET</span><span class="path">/api/v1/lookup/iban/{iban}</span><span class="muted">Reverse lookup IBAN</span></div><div class="endpoint"><span class="method">GET</span><span class="path">/api/v1/me</span><span class="muted">Compte & quota</span></div><div class="endpoint"><span class="method">GET</span><span class="path">/api/v1/usage</span><span class="muted">Historique Premium+</span></div><div class="endpoint"><span class="method">GET</span><span class="path">/api/v1/health</span><span class="muted">Santé publique</span></div></div></section>
-<section class="section" id="plans"><h2>Plans & limites</h2><p>Les quotas et capacités dépendent du plan.</p><div class="table"><table><thead><tr><th>Plan</th><th>Jour</th><th>Résultats</th><th>Pagination</th><th>Logs</th></tr></thead><tbody><tr><td>Starter</td><td>1 000</td><td>10</td><td>Page 1</td><td>—</td></tr><tr><td>Premium</td><td>5 000</td><td>10</td><td>Oui</td><td>Oui</td></tr><tr><td>Pro</td><td>10 000</td><td>10</td><td>Oui</td><td>Oui</td></tr><tr><td>Enterprise</td><td>100 000</td><td>100</td><td>Oui</td><td>Oui</td></tr><tr><td>MAX 1K</td><td>1 000</td><td>100</td><td>Oui</td><td>Oui</td></tr><tr><td>MAX 10K</td><td>10 000</td><td>100</td><td>Oui</td><td>Oui</td></tr><tr><td>MAX 100K</td><td>100 000</td><td>100</td><td>Oui</td><td>Oui</td></tr></tbody></table></div></section>
-<section class="section" id="auth"><h2>Authentification</h2><p>Les requêtes authentifiées utilisent le header <code>X-API-Key</code>. Les clés commencent par <code>brix_</code>.</p><pre class="code">X-API-Key: brix_votre_cle_api
-Content-Type: application/json</pre><div class="notice">Ne publiez jamais une clé API dans un dépôt public ou du code frontend. Utilisez une variable d'environnement côté serveur.</div></section>
-<section class="section" id="schema"><h2>Champs de recherche</h2><p>L'endpoint Search accepte des critères d'identité, contact, adresse, entreprise, véhicule et gaming.</p><div class="table"><table><thead><tr><th>Catégorie</th><th>Champs</th></tr></thead><tbody><tr><td>Identité</td><td><code>nom_famille</code>, <code>prenom</code>, <code>nom_naissance</code>, <code>nom_affichage</code>, <code>nom_utilisateur</code>, <code>date_naissance</code>, <code>annee_naissance</code>, <code>jour_naissance</code>, <code>mois_naissance</code>, <code>genre</code>, <code>civilite</code></td></tr><tr><td>Contact</td><td><code>email</code>, <code>telephone</code>, <code>mobile</code>, <code>adresse_ip</code></td></tr><tr><td>Adresse</td><td><code>adresse</code>, <code>complement_adresse</code>, <code>code_postal</code>, <code>ville</code>, <code>ville_naissance</code>, <code>lieu_naissance</code>, <code>pays</code>, <code>region</code>, <code>departement</code></td></tr><tr><td>Identifiants</td><td><code>nir</code>, <code>iban</code>, <code>bic</code>, <code>siret</code>, <code>siren</code></td></tr><tr><td>Véhicule</td><td><code>vin_plaque</code>, <code>immatriculation</code>, <code>numero_serie</code>, <code>marque</code>, <code>modele</code></td></tr><tr><td>Professionnel</td><td><code>societe</code>, <code>profession</code>, <code>fonction</code></td></tr><tr><td>Gaming</td><td><code>steam_id</code>, <code>fivem_license</code>, <code>fivem_license2</code>, <code>fivem_id</code>, <code>xbox_live_id</code>, <code>live_id</code>, <code>discord_id</code></td></tr><tr><td>Options</td><td><code>page</code>, <code>per_page</code>, <code>flexible</code></td></tr></tbody></table></div></section>
-<section class="section" id="examples"><h2>Exemple JavaScript</h2><p>Appelez l'API depuis votre backend et gardez la clé dans une variable d'environnement.</p><pre class="code">const r = await fetch('https://api.brixhub.to/api/v1/search', {
-  method: 'POST',
-  headers: {
-    'X-API-Key': process.env.BRIXHUB_API_KEY,
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    nom_famille: 'Dupont',
-    prenom: 'Jean',
-    ville: 'Paris',
-    flexible: true,
-    per_page: 10
-  })
-});
-const data = await r.json();</pre></section>
-<section class="section" id="errors"><h2>Codes d'erreur</h2><div class="table"><table><thead><tr><th>HTTP</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>400</td><td><code>bad_request</code></td><td>Paramètres invalides</td></tr><tr><td>401</td><td><code>unauthorized / expired</code></td><td>Clé absente, invalide ou expirée</td></tr><tr><td>403</td><td><code>plan_limited</code></td><td>Fonctionnalité non disponible</td></tr><tr><td>429</td><td><code>quota_exceeded / rate_limited</code></td><td>Quota ou limite minute atteinte</td></tr><tr><td>500</td><td><code>internal</code></td><td>Erreur serveur</td></tr><tr><td>503</td><td><code>service_unavailable</code></td><td>Service indisponible</td></tr></tbody></table></div></section>
-<footer class="footer">BrixHub API v1 · <code>https://api.brixhub.to/api/v1</code> · <a href="https://api.brixhub.to/api/v1/docs" target="_blank" rel="noreferrer">Swagger</a></footer>
-</main></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BrixHub — Analytics</title>
+
+  <style>
+    :root {
+      --bg: #07070a;
+      --panel: #111117;
+      --panel2: #18181f;
+      --line: #292932;
+      --text: #f5f5f7;
+      --muted: #a1a1aa;
+      --accent: #8b5cf6;
+      --accent2: #6366f1;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(
+          circle at 70% 0%,
+          rgba(109, 40, 217, .22),
+          transparent 35%
+        ),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 235px 1fr;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 22px 14px;
+      border-right: 1px solid var(--line);
+      background: rgba(10, 10, 14, .88);
+      backdrop-filter: blur(20px);
+    }
+
+    .logo {
+      padding: 8px;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+
+    .logo span {
+      color: #a78bfa;
+    }
+
+    .nav {
+      margin-top: 30px;
+      display: grid;
+      gap: 5px;
+    }
+
+    .nav a {
+      padding: 11px;
+      border-radius: 9px;
+      text-decoration: none;
+      color: var(--muted);
+      transition: .2s;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: var(--panel2);
+      color: white;
+    }
+
+    /* MAIN */
+
+    .main {
+      width: min(1300px, 100%);
+      margin: auto;
+      padding: 30px clamp(16px, 4vw, 55px) 80px;
+    }
+
+    section {
+      padding: 38px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    section:first-child {
+      border-top: 0;
+    }
+
+    .eyebrow {
+      color: #a78bfa;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 10px 0 16px;
+      font-size: clamp(44px, 6vw, 76px);
+      line-height: .94;
+      letter-spacing: -.065em;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      letter-spacing: -.04em;
+    }
+
+    .description {
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    /* BUTTONS */
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 15px;
+      color: white;
+      background: var(--panel2);
+      font-weight: 750;
+      text-decoration: none;
+      transition: .2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: #454552;
+    }
+
+    .btn.primary {
+      border: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    }
+
+    .btn.danger {
+      color: #fca5a5;
+    }
+
+    /* STATISTICS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 19px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: linear-gradient(180deg, #15151a, #101014);
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 27px;
+    }
+
+    /* PANELS */
+
+    .panel {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: linear-gradient(180deg, #15151a, #101014);
+    }
+
+    /* FORM */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      outline: none;
+      background: #09090c;
+      color: white;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent);
+    }
+
+    .field input::placeholder {
+      color: #52525b;
+    }
+
+    /* CHART */
+
+    .chart-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 430px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #0b0b0e;
+    }
+
+    /* RESULTS */
+
+    .result-list {
+      overflow: hidden;
+    }
+
+    .result {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 15px;
+      align-items: center;
+      padding: 14px 4px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .result:last-child {
+      border-bottom: 0;
+    }
+
+    .result-name {
+      font-weight: 750;
+    }
+
+    .result-source {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge {
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: #27272a;
+      color: #d4d4d8;
+      font-size: 11px;
+    }
+
+    .badge.success {
+      color: #86efac;
+      background: #052e16;
+    }
+
+    .badge.warning {
+      color: #fde68a;
+      background: #422006;
+    }
+
+    /* TABLE */
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 11px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: #e4e4e7;
+      font-size: 12px;
+    }
+
+    td {
+      color: var(--muted);
+    }
+
+    /* CODE */
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #09090c;
+      color: #d4d4d8;
+      font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .notice {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel2);
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* STATUS */
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(34, 197, 94, .7);
+    }
+
+    .dot.error {
+      background: var(--red);
+      box-shadow: none;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 900px) {
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .form-grid,
+      .chart-controls {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .main {
+        padding: 18px 14px 60px;
+      }
+
+      .stats,
+      .form-grid,
+      .chart-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .result {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-container {
+        height: 350px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="logo">
+      BRIX<span>HUB</span>
+    </div>
+
+    <nav class="nav">
+      <a class="active" href="#dashboard">Dashboard</a>
+      <a href="#search">Recherche</a>
+      <a href="#charts">Graphiques</a>
+      <a href="#results">Résultats</a>
+      <a href="#api">API</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <!-- DASHBOARD -->
+
+    <section id="dashboard">
+
+      <div class="eyebrow">
+        BrixHub Analytics
+      </div>
+
+      <h1>
+        Vos données,<br>
+        en clair.
+      </h1>
+
+      <p class="description">
+        Interface BrixHub pour rechercher, analyser et visualiser
+        les données que vous êtes autorisé à traiter.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" href="#search">
+          Nouvelle recherche
+        </a>
+
+        <a
+          class="btn"
+          href="https://api.brixhub.to/api/v1/docs"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Documentation API ↗
+        </a>
+      </div>
+
+      <div class="status">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">Vérification de l'API...</span>
+      </div>
+
+    </section>
+
+    <!-- STATS -->
+
+    <section>
+
+      <div class="stats">
+
+        <div class="stat">
+          <strong id="statResults">0</strong>
+          <span class="muted">Résultats</span>
+        </div>
+
+        <div class="stat">
+          <strong id="statSources">0</strong>
+          <span class="muted">Sources</span>
+        </div>
+
+        <div class="stat">
+          <strong id="statConfidence">—</strong>
+          <span class="muted">Confiance moyenne</span>
+        </div>
+
+        <div class="stat">
+          <strong id="statTime">—</strong>
+          <span class="muted">Temps API</span>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SEARCH -->
+
+    <section id="search">
+
+      <h2>Recherche</h2>
+
+      <p class="muted">
+        Entrez uniquement des critères pour lesquels vous avez
+        l'autorisation nécessaire.
+      </p>
+
+      <div class="panel">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Nom d'affichage / identifiant</label>
+            <input
+              id="fieldDisplay"
+              placeholder="ex. utilisateur_123"
+            >
+          </div>
+
+          <div class="field">
+            <label>Société</label>
+            <input
+              id="fieldCompany"
+              placeholder="ex. Brix SAS"
+            >
+          </div>
+
+          <div class="field">
+            <label>Profession</label>
+            <input
+              id="fieldJob"
+              placeholder="ex. développeur"
+            >
+          </div>
+
+          <div class="field">
+            <label>Steam ID</label>
+            <input
+              id="fieldSteam"
+              placeholder="Identifiant autorisé"
+            >
+          </div>
+
+          <div class="field">
+            <label>Discord ID</label>
+            <input
+              id="fieldDiscord"
+              placeholder="Identifiant autorisé"
+            >
+          </div>
+
+          <div class="field">
+            <label>Ville</label>
+            <input
+              id="fieldCity"
+              placeholder="ex. Paris"
+            >
+          </div>
+
+          <div class="field">
+            <label>Page</label>
+            <input
+              id="fieldPage"
+              type="number"
+              min="1"
+              value="1"
+            >
+          </div>
+
+          <div class="field">
+            <label>Résultats par page</label>
+
+            <select id="fieldPerPage">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Mode</label>
+
+            <select id="fieldFlexible">
+              <option value="false">
+                Exact
+              </option>
+
+              <option value="true">
+                Flexible
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <button
+            class="btn primary"
+            id="searchButton"
+          >
+            🔎 Rechercher
+          </button>
+
+          <button
+            class="btn"
+            id="demoButton"
+          >
+            🧪 Charger une démo
+          </button>
+
+          <button
+            class="btn danger"
+            id="resetButton"
+          >
+            Réinitialiser
+          </button>
+
+        </div>
+
+        <div
+          class="muted"
+          id="searchMessage"
+        >
+          Prêt.
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CHART -->
+
+    <section id="charts">
+
+      <h2>Graphique personnalisable</h2>
+
+      <p class="muted">
+        Modifiez le type, la métrique et le nombre de points.
+        Le graphique est recalculé automatiquement.
+      </p>
+
+      <div class="panel">
+
+        <div class="chart-controls">
+
+          <div class="field">
+
+            <label>
+              Type de graphique
+            </label>
+
+            <select id="chartType">
+
+              <option value="bar">
+                📊 Barres
+              </option>
+
+              <option value="line">
+                📈 Ligne
+              </option>
+
+              <option value="area">
+                📉 Aire
+              </option>
+
+              <option value="donut">
+                🍩 Donut
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="field">
+
+            <label>
+              Métrique
+            </label>
+
+            <select id="chartMetric">
+
+              <option value="source">
+                Résultats par source
+              </option>
+
+              <option value="confidence">
+                Confiance
+              </option>
+
+              <option value="count">
+                Nombre de résultats
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="field">
+
+            <label>
+              Points :
+              <span id="pointsLabel">8</span>
+            </label>
+
+            <input
+              id="chartPoints"
+              type="range"
+              min="3"
+              max="20"
+              value="8"
+            >
+
+          </div>
+
+        </div>
+
+        <div class="chart-container">
+          <canvas id="chart"></canvas>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- RESULTS -->
+
+    <section id="results">
+
+      <h2>Résultats</h2>
+
+      <p
+        class="muted"
+        id="resultSummary"
+      >
+        Aucun résultat.
+      </p>
+
+      <div
+        class="panel result-list"
+        id="resultList"
+      >
+        Lancez une recherche ou chargez les données de démonstration.
+      </div>
+
+    </section>
+
+    <!-- RAW TABLE -->
+
+    <section>
+
+      <h2>Données brutes</h2>
+
+      <p class="muted">
+        Aperçu des champs retournés par l'API.
+      </p>
+
+      <div class="panel table-wrapper">
+
+        <table>
+
+          <thead id="rawHead">
+            <tr>
+              <th>Champ</th>
+              <th>Valeur</th>
+            </tr>
+          </thead>
+
+          <tbody id="rawBody">
+
+            <tr>
+              <td colspan="2">
+                Aucune donnée.
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+    <!-- API -->
+
+    <section id="api">
+
+      <h2>Architecture API</h2>
+
+      <pre>Browser
+   │
+   │ POST /api/search
+   ▼
+Pterodactyl / server.js
+   │
+   │ X-API-Key
+   ▼
+BrixHub API
+   │
+   ▼
+JSON
+   │
+   ▼
+Dashboard + Graphiques</pre>
+
+      <div class="notice">
+        🔐 La clé API BrixHub doit rester côté serveur.
+        Elle ne doit jamais être placée dans le JavaScript
+        exécuté par le navigateur.
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+
 <script>
-const $=s=>document.querySelector(s),fields=[...document.querySelectorAll('.field input[name]')];
-$('#clear').onclick=()=>{fields.forEach(x=>x.value='');$('#result').hidden=true;$('#status').textContent='Prêt.'};
-$('#search').onclick=async()=>{const payload={};fields.forEach(x=>{if(x.value.trim())payload[x.name]=x.value.trim()});payload.per_page=Number($('#per_page').value);payload.flexible=$('#flexible').value==='true';if(!Object.keys(payload).some(k=>!['per_page','flexible'].includes(k))){$('#status').textContent='Indiquez au moins un critère.';return}const b=$('#search');b.disabled=true;$('#status').textContent='Recherche en cours…';$('#result').hidden=true;try{const r=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const d=await r.json();$('#result').textContent=JSON.stringify(d,null,2);$('#result').hidden=false;$('#status').textContent=r.ok?'Recherche terminée.':`Erreur HTTP ${r.status} : ${d.error||'erreur'}`}catch(e){$('#status').textContent='Erreur réseau : '+e.message}finally{b.disabled=false}};
-</script></body></html>
+
+const $ = id => document.getElementById(id);
+
+let rows = [];
+
+
+/* =========================================================
+   UTILITAIRES
+========================================================= */
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[char]);
+
+}
+
+
+/* =========================================================
+   DEMO
+========================================================= */
+
+function loadDemo() {
+
+  rows = [
+
+    {
+      name: "Projet Atlas",
+      source: "Source A",
+      confidence: 92
+    },
+
+    {
+      name: "Projet Nova",
+      source: "Source A",
+      confidence: 84
+    },
+
+    {
+      name: "Projet Orion",
+      source: "Source B",
+      confidence: 76
+    },
+
+    {
+      name: "Projet Delta",
+      source: "Source C",
+      confidence: 95
+    },
+
+    {
+      name: "Projet Alpha",
+      source: "Source B",
+      confidence: 88
+    },
+
+    {
+      name: "Projet Sigma",
+      source: "Source C",
+      confidence: 73
+    },
+
+    {
+      name: "Projet Gamma",
+      source: "Source A",
+      confidence: 81
+    },
+
+    {
+      name: "Projet Beta",
+      source: "Source D",
+      confidence: 90
+    }
+
+  ];
+
+  render();
+
+}
+
+
+/* =========================================================
+   NORMALISATION API
+========================================================= */
+
+function normalizeAPIResponse(data) {
+
+  const results =
+    data?.data?.results ||
+    data?.results ||
+    [];
+
+  return results.map((item, index) => {
+
+    return {
+
+      name:
+        item.nom_affichage ||
+        item.nom_utilisateur ||
+        item.societe ||
+        item.prenom ||
+        `Résultat ${index + 1}`,
+
+      source:
+        Array.isArray(item._sources)
+          ? item._sources.join(", ")
+          : (
+              item._source_db ||
+              "Source inconnue"
+            ),
+
+      confidence:
+        Number.isFinite(
+          Number(item._confidence)
+        )
+          ? Number(item._confidence)
+          : null,
+
+      raw: item
+
+    };
+
+  });
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render() {
+
+  const sources = [
+    ...new Set(
+      rows.flatMap(row =>
+        String(row.source)
+          .split(",")
+          .map(x => x.trim())
+          .filter(Boolean)
+      )
+    )
+  ];
+
+  const confidenceRows =
+    rows.filter(row =>
+      row.confidence !== null
+    );
+
+  const averageConfidence =
+    confidenceRows.length
+      ? Math.round(
+          confidenceRows.reduce(
+            (total, row) =>
+              total + row.confidence,
+            0
+          ) / confidenceRows.length
+        )
+      : null;
+
+
+  $("statResults").textContent =
+    rows.length;
+
+  $("statSources").textContent =
+    sources.length;
+
+  $("statConfidence").textContent =
+    averageConfidence === null
+      ? "—"
+      : `${averageConfidence}%`;
+
+
+  $("resultSummary").textContent =
+    rows.length
+      ? `${rows.length} résultat(s) affiché(s)`
+      : "Aucun résultat.";
+
+
+  renderResults();
+
+  renderRawData();
+
+  drawChart();
+
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+function renderResults() {
+
+  if (!rows.length) {
+
+    $("resultList").innerHTML =
+      `<span class="muted">
+        Lancez une recherche ou chargez les données de démonstration.
+      </span>`;
+
+    return;
+
+  }
+
+
+  $("resultList").innerHTML =
+    rows.map(row => {
+
+      const confidence =
+        row.confidence === null
+          ? "—"
+          : `${row.confidence}%`;
+
+      return `
+
+        <div class="result">
+
+          <div>
+
+            <div class="result-name">
+              ${escapeHTML(row.name)}
+            </div>
+
+            <div class="result-source">
+              ${escapeHTML(row.source)}
+            </div>
+
+          </div>
+
+          <span class="badge">
+            ${confidence}
+          </span>
+
+          <span class="badge success">
+            Donnée reçue
+          </span>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   RAW DATA
+========================================================= */
+
+function renderRawData() {
+
+  if (!rows.length) {
+
+    $("rawBody").innerHTML = `
+      <tr>
+        <td colspan="2">
+          Aucune donnée.
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+
+  const raw =
+    rows[0].raw || rows[0];
+
+  $("rawBody").innerHTML =
+    Object.entries(raw)
+      .map(([key, value]) => {
+
+        let formatted;
+
+        if (typeof value === "object") {
+
+          formatted =
+            JSON.stringify(value);
+
+        } else {
+
+          formatted =
+            String(value ?? "");
+
+        }
+
+        return `
+          <tr>
+            <td>
+              <strong>
+                ${escapeHTML(key)}
+              </strong>
+            </td>
+
+            <td>
+              ${escapeHTML(formatted)}
+            </td>
+          </tr>
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =========================================================
+   CHART DATA
+========================================================= */
+
+function getChartData() {
+
+  const limit =
+    Number(
+      $("chartPoints").value
+    );
+
+  const metric =
+    $("chartMetric").value;
+
+
+  /* CONFIANCE */
+
+  if (metric === "confidence") {
+
+    return rows
+      .slice(0, limit)
+      .map((row, index) => ({
+
+        label:
+          row.name.slice(0, 16),
+
+        value:
+          row.confidence ?? 0
+
+      }));
+
+  }
+
+
+  /* NOMBRE */
+
+  if (metric === "count") {
+
+    return rows
+      .slice(0, limit)
+      .map(row => ({
+
+        label:
+          row.name.slice(0, 16),
+
+        value: 1
+
+      }));
+
+  }
+
+
+  /* SOURCES */
+
+  const sourceMap =
+    new Map();
+
+
+  rows.forEach(row => {
+
+    String(row.source)
+      .split(",")
+      .map(x => x.trim())
+      .filter(Boolean)
+      .forEach(source => {
+
+        sourceMap.set(
+          source,
+          (sourceMap.get(source) || 0) + 1
+        );
+
+      });
+
+  });
+
+
+  return [
+    ...sourceMap.entries()
+  ]
+    .slice(0, limit)
+    .map(([label, value]) => ({
+      label,
+      value
+    }));
+
+}
+
+
+/* =========================================================
+   DRAW CHART
+========================================================= */
+
+function drawChart() {
+
+  const canvas =
+    $("chart");
+
+  const ctx =
+    canvas.getContext("2d");
+
+
+  const ratio =
+    window.devicePixelRatio || 1;
+
+  const width =
+    canvas.clientWidth;
+
+  const height =
+    canvas.clientHeight;
+
+
+  canvas.width =
+    width * ratio;
+
+  canvas.height =
+    height * ratio;
+
+
+  ctx.setTransform(
+    ratio,
+    0,
+    0,
+    ratio,
+    0,
+    0
+  );
+
+
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  const data =
+    getChartData();
+
+
+  if (!data.length) {
+
+    ctx.fillStyle =
+      "#71717a";
+
+    ctx.font =
+      "14px system-ui";
+
+    ctx.fillText(
+      "Aucune donnée à afficher",
+      25,
+      35
+    );
+
+    return;
+
+  }
+
+
+  const type =
+    $("chartType").value;
+
+  const padding = 45;
+
+  const max =
+    Math.max(
+      1,
+      ...data.map(
+        item => item.value
+      )
+    );
+
+
+  /* DONUT */
+
+  if (type === "donut") {
+
+    drawDonut(
+      ctx,
+      width,
+      height,
+      data
+    );
+
+    return;
+
+  }
+
+
+  const chartWidth =
+    width - padding * 2;
+
+  const chartHeight =
+    height - padding * 2;
+
+  const columnWidth =
+    chartWidth / data.length;
+
+
+  /* GRID */
+
+  ctx.strokeStyle =
+    "#292932";
+
+  ctx.lineWidth = 1;
+
+  for (let i = 0; i <= 4; i++) {
+
+    const y =
+      height -
+      padding -
+      chartHeight * i / 4;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      padding,
+      y
+    );
+
+    ctx.lineTo(
+      width - padding,
+      y
+    );
+
+    ctx.stroke();
+
+  }
+
+
+  /* BARRES */
+
+  if (type === "bar") {
+
+    data.forEach(
+      (item, index) => {
+
+        const barWidth =
+          columnWidth * .55;
+
+        const barHeight =
+          (
+            item.value / max
+          ) * chartHeight;
+
+        const x =
+          padding +
+          columnWidth * index +
+          (columnWidth - barWidth) / 2;
+
+        const y =
+          height -
+          padding -
+          barHeight;
+
+
+        ctx.fillStyle =
+          "#8b5cf6";
+
+
+        ctx.beginPath();
+
+        ctx.roundRect(
+          x,
+          y,
+          barWidth,
+          barHeight,
+          6
+        );
+
+        ctx.fill();
+
+      }
+    );
+
+  }
+
+
+  /* LIGNE / AIRE */
+
+  if (
+    type === "line" ||
+    type === "area"
+  ) {
+
+    const points =
+      data.map(
+        (item, index) => ({
+
+          x:
+            padding +
+            columnWidth * index +
+            columnWidth / 2,
+
+          y:
+            height -
+            padding -
+            (
+              item.value / max
+            ) * chartHeight
+
+        })
+      );
+
+
+    ctx.beginPath();
+
+    points.forEach(
+      (point, index) => {
+
+        if (index === 0) {
+
+          ctx.moveTo(
+            point.x,
+            point.y
+          );
+
+        } else {
+
+          ctx.lineTo(
+            point.x,
+            point.y
+          );
+
+        }
+
+      }
+    );
+
+
+    if (type === "area") {
+
+      ctx.lineTo(
+        points[points.length - 1].x,
+        height - padding
+      );
+
+      ctx.lineTo(
+        points[0].x,
+        height - padding
+      );
+
+      ctx.closePath();
+
+      ctx.fillStyle =
+        "rgba(139,92,246,.18)";
+
+      ctx.fill();
+
+      ctx.beginPath();
+
+      points.forEach(
+        (point, index) => {
+
+          if (index === 0) {
+
+            ctx.moveTo(
+              point.x,
+              point.y
+            );
+
+          } else {
+
+            ctx.lineTo(
+              point.x,
+              point.y
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    ctx.strokeStyle =
+      "#a78bfa";
+
+    ctx.lineWidth = 3;
+
+    ctx.stroke();
+
+
+    points.forEach(
+      point => {
+
+        ctx.beginPath();
+
+        ctx.arc(
+          point.x,
+          point.y,
+          4,
+          0,
+          Math.PI * 2
+        );
+
+        ctx.fillStyle =
+          "#a78bfa";
+
+        ctx.fill();
+
+      }
+    );
+
+  }
+
+
+  /* LABELS */
+
+  data.forEach(
+    (item, index) => {
+
+      const x =
+        padding +
+        columnWidth * index +
+        columnWidth / 2;
+
+
+      ctx.fillStyle =
+        "#a1a1aa";
+
+      ctx.font =
+        "11px system-ui";
+
+      ctx.textAlign =
+        "center";
+
+
+      ctx.fillText(
+        item.label,
+        x,
+        height - 15
+      );
+
+    }
+  );
+
+  ctx.textAlign =
+    "left";
+
+}
+
+
+/* =========================================================
+   DONUT
+========================================================= */
+
+function drawDonut(
+  ctx,
+  width,
+  height,
+  data
+) {
+
+  const centerX =
+    width / 2;
+
+  const centerY =
+    height / 2;
+
+  const radius =
+    Math.min(
+      width,
+      height
+    ) / 3;
+
+
+  const total =
+    data.reduce(
+      (sum, item) =>
+        sum + item.value,
+      0
+    );
+
+
+  let angle =
+    -Math.PI / 2;
+
+
+  data.forEach(
+    (item, index) => {
+
+      const slice =
+        (
+          item.value /
+          total
+        ) *
+        Math.PI *
+        2;
+
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        centerX,
+        centerY
+      );
+
+      ctx.arc(
+        centerX,
+        centerY,
+        radius,
+        angle,
+        angle + slice
+      );
+
+      ctx.closePath();
+
+
+      ctx.fillStyle =
+        `hsl(${250 + index * 35} 70% 65%)`;
+
+      ctx.fill();
+
+
+      angle += slice;
+
+    }
+  );
+
+
+  /* TROU */
+
+  ctx.beginPath();
+
+  ctx.arc(
+    centerX,
+    centerY,
+    radius * .58,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    "#0b0b0e";
+
+  ctx.fill();
+
+}
+
+
+/* =========================================================
+   API SEARCH
+========================================================= */
+
+$("searchButton").addEventListener(
+  "click",
+  async () => {
+
+    const payload = {
+
+      nom_affichage:
+        $("fieldDisplay").value.trim(),
+
+      societe:
+        $("fieldCompany").value.trim(),
+
+      profession:
+        $("fieldJob").value.trim(),
+
+      steam_id:
+        $("fieldSteam").value.trim(),
+
+      discord_id:
+        $("fieldDiscord").value.trim(),
+
+      ville:
+        $("fieldCity").value.trim(),
+
+      page:
+        Number(
+          $("fieldPage").value
+        ) || 1,
+
+      per_page:
+        Number(
+          $("fieldPerPage").value
+        ),
+
+      flexible:
+        $("fieldFlexible").value === "true"
+
+    };
+
+
+    /* Retire les champs vides */
+
+    Object.keys(payload)
+      .forEach(key => {
+
+        if (
+          payload[key] === "" ||
+          payload[key] === undefined ||
+          payload[key] === null
+        ) {
+
+          delete payload[key];
+
+        }
+
+      });
+
+
+    const hasSearch =
+      Object.keys(payload)
+        .some(
+          key =>
+            ![
+              "page",
+              "per_page",
+              "flexible"
+            ].includes(key)
+        );
+
+
+    if (!hasSearch) {
+
+      $("searchMessage").textContent =
+        "Ajoutez au moins un critère de recherche.";
+
+      return;
+
+    }
+
+
+    $("searchButton").disabled =
+      true;
+
+    $("searchMessage").textContent =
+      "🔎 Recherche en cours...";
+
+
+    const start =
+      performance.now();
+
+
+    try {
+
+      const response =
+        await fetch(
+          "/api/search",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify(payload)
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      $("statTime").textContent =
+        `${Math.round(
+          performance.now() - start
+        )} ms`;
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.error ||
+          `HTTP ${response.status}`
+        );
+
+      }
+
+
+      rows =
+        normalizeAPIResponse(data);
+
+
+      render();
+
+
+      $("searchMessage").textContent =
+        `✅ ${rows.length} résultat(s) reçu(s).`;
+
+
+      $("charts").scrollIntoView({
+        behavior: "smooth"
+      });
+
+
+    } catch (error) {
+
+      $("searchMessage").textContent =
+        `❌ ${error.message}`;
+
+    } finally {
+
+      $("searchButton").disabled =
+        false;
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   DEMO / RESET
+========================================================= */
+
+$("demoButton").addEventListener(
+  "click",
+  () => {
+
+    loadDemo();
+
+    $("searchMessage").textContent =
+      "🧪 Données de démonstration chargées.";
+
+  }
+);
+
+
+$("resetButton").addEventListener(
+  "click",
+  () => {
+
+    rows = [];
+
+    [
+      "fieldDisplay",
+      "fieldCompany",
+      "fieldJob",
+      "fieldSteam",
+      "fieldDiscord",
+      "fieldCity"
+    ].forEach(
+      id => $(id).value = ""
+    );
+
+
+    render();
+
+
+    $("searchMessage").textContent =
+      "Réinitialisé.";
+
+  }
+);
+
+
+/* =========================================================
+   GRAPH CONTROLS
+========================================================= */
+
+$("chartType").addEventListener(
+  "change",
+  drawChart
+);
+
+
+$("chartMetric").addEventListener(
+  "change",
+  drawChart
+);
+
+
+$("chartPoints").addEventListener(
+  "input",
+  () => {
+
+    $("pointsLabel").textContent =
+      $("chartPoints").value;
+
+    drawChart();
+
+  }
+);
+
+
+/* =========================================================
+   API HEALTH
+========================================================= */
+
+async function checkHealth() {
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/health",
+        {
+          cache: "no-store"
+        }
+      );
+
+
+    if (!response.ok) {
+      throw new Error();
+    }
+
+
+    $("statusDot")
+      .classList.remove("error");
+
+
+    $("statusText").textContent =
+      "API opérationnelle";
+
+
+  } catch {
+
+    $("statusDot")
+      .classList.add("error");
+
+
+    $("statusText").textContent =
+      "API indisponible";
+
+  }
+
+}
+
+
+/* =========================================================
+   INITIALISATION
+========================================================= */
+
+window.addEventListener(
+  "resize",
+  drawChart
+);
+
+render();
+
+checkHealth();
+
+setInterval(
+  checkHealth,
+  30000
+);
+
+</script>
+
+</body>
+</html>
